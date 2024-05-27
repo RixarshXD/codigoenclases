@@ -24,9 +24,9 @@ export const obtenerPersonas = async ()=>{
 }
       
 export const actualizarPersona = async(persona,id)=>{
-    console.log("ACA")
-    console.log(persona)
-    console.log(id)
+    // console.log("ACA")
+    // console.log(persona)
+    // console.log(id)
     const ref = doc(db, 'personas', id);
     await updateDoc(ref, persona)
 }

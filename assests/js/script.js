@@ -1,4 +1,4 @@
-import {actualizarPersona, obtenerPersonas, registrarPersona} from "./promesas.js"
+import {actualizarPersona, eliminarPersona, obtenerPersonas, registrarPersona} from "./promesas.js"
 
 
 window.addEventListener("load",()=>{
@@ -33,14 +33,13 @@ const registrar=()=>{
         // mostrar una alerta de exito al registrar o el error
     registrarPersona(objeto).then(()=>{
         alert("se registró con exito");
+        traerDatos(); //se actualiza cada vez que se haga un cambio
     }).catch((r)=>{
         console.log(r)
     });
 }
 
 const traerDatos = ()=>{
-    
-
     // el parametro que esta dentro del then es un listado de algo
     obtenerPersonas().then((personas)=>{
         let estructura = '';
@@ -59,7 +58,7 @@ const traerDatos = ()=>{
 
             estructura += '</tr>';
 
-        })
+        });
         console.log(estructura);
         document.getElementById('tbPersonas').innerHTML = estructura;
         personas.forEach((p)=>{
@@ -74,12 +73,22 @@ const traerDatos = ()=>{
                 document.getElementById("UPDfnacimiento").value = p.fnacimiento;
                 document.getElementById('btnActualizar').value = p.id;
                 // alert('diste click a:' +p.rut)
-            })
-        })  
-     
-    }); 
+            });
+            // aqui elimino a la persona
+            let elementoEliminar = document.getElementById('DEL'+p.id);
+            elementoEliminar.addEventListener('click', ()=>{
+                eliminar(p.id);
+            });
+        });  
+    }).catch((e)=>{
+        console.log(e)
+    })
 
-}
+};
+
+
+
+
 
 const actualizar=()=>{
     let eNombre=document.getElementById("UPDnombre");
@@ -88,7 +97,7 @@ const actualizar=()=>{
     let eCorreo=document.getElementById("UPDcorreo");
     let eEdad=document.getElementById("UPDedad");
     let eFnacimiento=document.getElementById("UPDfnacimiento");
-
+    
     let vNombre=eNombre.value;
     let vApellido=eApellido.value;
     let vRut=eRut.value;
@@ -106,8 +115,20 @@ const actualizar=()=>{
     let id = document.getElementById('btnActualizar').value;
     actualizarPersona(objeto,id).then(()=>{
         alert('se actualizo correctamente')
+        traerDatos(); //se actualiza cuando ocurre un cambio
     }).catch((e)=>{
         console.log(e)
-    })
-}
+    });
+};
+
+
+const eliminar = (id) => {
+    eliminarPersona(id).then(() => {
+        alert('Se eliminó correctamente');
+        traerDatos(); // Actualizar la tabla después de eliminar
+    }).catch((e) => {
+        console.log(e);
+    });
+};
+
 
